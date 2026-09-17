@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>我是谁转世 · 历史名人人格原型测评</title>
+<style>
+:root{
+  --paper:#f6f1e7; --paper2:#efe7d6; --ink:#2b2620; --ink2:#6b6155;
+  --red:#8a1f1f; --red2:#a8402e; --gold:#a98a45; --line:#d8cdb6;
+  --green:#3e5c48;
+}
+*{box-sizing:border-box;margin:0;padding:0;scrollbar-width:none;-ms-overflow-style:none}
+*::-webkit-scrollbar{width:0;height:0;display:none;background:transparent}
+html,body{background:var(--paper);color:var(--ink);
+  font-family:"Songti SC","Noto Serif SC","STSong","SimSun",serif;
+  line-height:1.75;-webkit-font-smoothing:antialiased}
+body{overscroll-behavior-y:none;min-height:100dvh}
+.wrap{max-width:760px;margin:0 auto;padding:32px 20px 80px}
+.seal{display:inline-block;border:2px solid var(--red);color:var(--red);
+  font-size:13px;letter-spacing:4px;padding:4px 10px;border-radius:4px;
+  transform:rotate(-2deg);font-weight:700}
+h1{font-size:34px;margin:18px 0 6px;letter-spacing:6px}
+.slogan{font-size:19px;color:var(--red);letter-spacing:2px;font-weight:700;margin-top:14px}
+.slogan::before{content:"「";color:var(--gold)}
+.slogan::after{content:"」";color:var(--gold)}
+.sub{color:var(--ink2);font-size:15px;letter-spacing:1px}
+.card{background:#fffdf7;border:1px solid var(--line);border-radius:10px;
+  padding:26px 28px;margin-top:22px;box-shadow:0 2px 14px rgba(80,60,20,.06)}
+.meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;margin:14px 0;font-size:14px;color:var(--ink2)}
+.meta-grid b{color:var(--ink)}
+.btn{appearance:none;border:none;cursor:pointer;font-family:inherit;
+  background:var(--red);color:#fdf6e9;font-size:17px;letter-spacing:4px;
+  padding:13px 34px;border-radius:8px;transition:.2s}
+.btn:hover{background:var(--red2)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--gold);color:var(--gold)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn.small{padding:8px 16px;font-size:14px;letter-spacing:2px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:22px}
+.note{font-size:12.5px;color:var(--ink2);margin-top:16px;border-top:1px dashed var(--line);padding-top:12px}
+.guide{background:var(--paper);border-radius:8px;padding:12px 16px;margin-top:18px;
+  font-size:13.5px;color:var(--ink2);border:1px solid var(--line)}
+.guide b{color:var(--ink);letter-spacing:2px}
+ul.clean{list-style:none}
+ul.clean li{padding:7px 0 7px 20px;position:relative;font-size:15px}
+ul.clean li::before{content:"";position:absolute;left:2px;top:15px;width:7px;height:7px;
+  background:var(--gold);border-radius:50%}
+/* 进度 */
+.progress{height:6px;background:var(--paper2);border-radius:3px;overflow:hidden;margin:18px 0 4px}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--red),var(--gold));width:0;transition:.25s}
+.pcount{font-size:13px;color:var(--ink2);text-align:right;letter-spacing:2px}
+.quiz-head{position:sticky;top:0;z-index:20;background:var(--paper);padding:12px 0 10px}
+.autohint{font-size:12.5px;color:var(--ink2);text-align:center;margin-top:14px;letter-spacing:1px}
+/* 题目 */
+.qtext{font-size:20px;line-height:1.8;margin:26px 0 20px;font-weight:700}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;align-items:center;gap:12px;border:1px solid var(--line);
+  border-radius:8px;padding:12px 16px;cursor:pointer;transition:.15s;background:#fffdf7;font-size:15.5px;-webkit-tap-highlight-color:transparent}
+.opt:hover{border-color:var(--gold)}
+.opt.sel{border-color:var(--red);background:#fbf0ea;font-weight:700}
+.opt .dot{width:16px;height:16px;border:2px solid #b9ac92;border-radius:50%;flex:none;position:relative}
+.opt.sel .dot{border-color:var(--red)}
+.opt.sel .dot::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--red)}
+.warn{color:var(--red);font-size:13.5px;margin-top:10px;min-height:20px}
+/* 结果 */
+.hero{text-align:center;padding:8px 0 4px}
+.hero .era{color:var(--ink2);font-size:14px;letter-spacing:2px;margin-top:6px}
+.hero h2{font-size:40px;letter-spacing:8px;margin:10px 0 2px}
+.hero .tag{color:var(--red);font-size:17px;letter-spacing:3px;font-weight:700}
+.verdict{background:var(--paper);border-left:4px solid var(--red);padding:14px 18px;
+  border-radius:0 8px 8px 0;margin:20px 0;font-size:15.5px}
+h3.sec{font-size:17px;letter-spacing:3px;margin:26px 0 8px;padding-left:12px;
+  border-left:4px solid var(--gold)}
+.dimbar{margin:12px 0}
+.dimbar .lab{display:flex;justify-content:space-between;flex-wrap:wrap;gap:0 8px;font-size:13.5px;color:var(--ink2);margin-bottom:3px}
+.dimbar .track{height:8px;background:var(--paper2);border-radius:4px;position:relative;overflow:hidden}
+.dimbar .fill{position:absolute;top:0;bottom:0;left:50%;background:var(--red);border-radius:4px}
+.dimbar .mid{position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:#b9ac92}
+.dim-explain{font-size:13px;color:var(--ink2);margin-top:2px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 26px}
+.neigh{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.pill{border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:13.5px;background:#fffdf7}
+.pill b{color:var(--red)}
+.pill.link{cursor:pointer}
+.pill.link:hover{border-color:var(--gold)}
+.dual{background:#f3ece0;border:1px dashed var(--gold);border-radius:8px;padding:12px 16px;font-size:14.5px;margin:14px 0}
+.footer-actions{margin-top:30px;text-align:center}
+.histlist{font-size:13.5px;color:var(--ink2)}
+.histlist b{color:var(--ink)}
+.toc-figures{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
+.toc-figures span{font-size:13.5px;text-align:center;padding:6px 4px;border:1px solid var(--line);border-radius:6px;background:#fffdf7}
+
+/* 右上角「人物档案」入口 */
+#archiveEntry{position:fixed;top:max(12px,env(safe-area-inset-top));right:12px;z-index:60;
+  background:rgba(255,253,247,.94);border:1px solid var(--gold);color:var(--red);
+  font-family:inherit;font-size:13.5px;letter-spacing:2px;font-weight:700;
+  padding:9px 14px;border-radius:999px;cursor:pointer;box-shadow:0 2px 10px rgba(80,60,20,.12);
+  -webkit-tap-highlight-color:transparent}
+#archiveEntry:active{transform:scale(.96)}
+
+/* 人物档案（全屏覆盖层） */
+#screen-archive{position:fixed;inset:0;z-index:100;background:var(--paper);
+  display:none;flex-direction:column}
+.arc-head{position:sticky;top:0;z-index:5;background:var(--paper);
+  border-bottom:1px solid var(--line);padding:max(10px,env(safe-area-inset-top)) 14px 10px;
+  display:flex;align-items:center;gap:10px}
+.arc-head .t{flex:1;text-align:center;font-weight:700;letter-spacing:3px;font-size:16px}
+.arc-head .cnt{color:var(--ink2);font-size:13px;letter-spacing:1px;min-width:52px;text-align:right}
+.arc-stage{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+.arc-track{display:flex;transition:transform .28s ease;will-change:transform}
+.arc-page{flex:0 0 100%;max-width:100%;padding:14px 14px 40px;
+  display:flex;flex-direction:column;gap:0}
+.arc-page .card{margin-top:12px}
+.arc-nav{position:fixed;top:50%;z-index:6;width:40px;height:40px;border-radius:50%;
+  border:1px solid var(--line);background:rgba(255,253,247,.9);color:var(--red);
+  font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transform:translateY(-50%);box-shadow:0 2px 8px rgba(80,60,20,.12)}
+#arcPrev{left:8px}#arcNext{right:8px}
+.arc-dots{position:sticky;bottom:0;background:var(--paper);text-align:center;padding:10px 0 max(12px,env(safe-area-inset-bottom));
+  border-top:1px solid var(--line)}
+.arc-dots i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#cdbf9f;margin:0 3px;cursor:pointer}
+.arc-dots i.on{background:var(--red);transform:scale(1.25)}
+.arc-hint{text-align:center;font-size:12px;color:var(--ink2);padding:6px 0 0;letter-spacing:1px}
+.arc-neigh{margin-top:26px}
+
+/* ===== 移动化适配（≤720px 手机竖屏）：按宽高自适应，无可见滚动条 ===== */
+@media(max-width:720px){
+  html,body{height:100dvh;overflow:hidden}
+  .wrap{height:100dvh;padding:54px 14px 12px;overflow-y:auto;overflow-x:hidden}
+  section{max-width:100%}
+  .card{padding:18px 15px;border-radius:8px;margin-top:16px}
+  h1{font-size:clamp(24px,7.5vw,28px);letter-spacing:4px;margin:14px 0 4px}
+  .slogan{font-size:clamp(15px,4.4vw,17px);margin-top:10px}
+  .sub{font-size:12.5px;line-height:1.6}
+  .seal{font-size:11.5px;padding:3px 8px}
+  .meta-grid{grid-template-columns:1fr 1fr;gap:6px 12px;font-size:13px}
+  .btn{padding:12px 14px;font-size:15.5px;letter-spacing:2px}
+  .row{gap:10px;margin-top:16px}
+  .row .btn{flex:1}
+  .grid2{grid-template-columns:1fr;gap:10px}
+  .toc-figures{grid-template-columns:repeat(4,1fr);gap:6px}
+  .toc-figures span{font-size:12px;padding:5px 2px}
+  .guide{font-size:12.5px;padding:10px 12px;margin-top:14px}
+
+  /* 答题屏：一屏完整容下，不滚动（显隐由 JS 内联样式控制）*/
+  #screen-quiz{flex-direction:column;min-height:calc(100dvh - 96px)}
+  #screen-quiz .card{flex:1;display:flex;flex-direction:column;margin-top:10px;padding:16px 14px}
+  .quiz-head{padding:6px 0 8px}
+  .qtext{font-size:clamp(16px,4.4vw,18px);line-height:1.65;margin:8px 0 14px}
+  .opts{flex:1;justify-content:center;gap:8px}
+  .opt{padding:10px 13px;font-size:15px;min-height:48px;gap:10px}
+  .autohint{margin-top:10px;font-size:11.5px}
+  #screen-quiz .row{margin-top:auto;padding-top:10px}
+
+  /* 结果与档案：卡片内部信息紧凑，长文在容器内滑动，滚动条不可见 */
+  .hero h2{font-size:30px;letter-spacing:6px}
+  .hero .tag{font-size:15px;letter-spacing:2px}
+  .hero .era{font-size:12.5px}
+  .verdict{font-size:14.5px;padding:11px 13px;margin:14px 0}
+  h3.sec{font-size:15.5px;letter-spacing:2px;margin:18px 0 5px}
+  ul.clean li{font-size:14px;padding:5px 0 5px 18px}
+  ul.clean li::before{top:13px}
+  .dimbar{margin:9px 0}
+  .pill{font-size:12.5px;padding:4px 11px}
+  .histlist{font-size:12.5px}
+  .note{font-size:11.5px}
+
+  /* 档案覆盖层：自身管理全屏高度 */
+  #screen-archive{height:100dvh}
+  .arc-stage{flex:1;min-height:0}
+  .arc-page{padding:10px 10px 30px}
+  .arc-page .card{margin-top:10px}
+  .arc-nav{width:34px;height:34px;font-size:16px}
+  .arc-dots{padding:7px 0 8px}
+  #archiveEntry{top:max(10px,env(safe-area-inset-top));right:10px;font-size:12.5px;padding:8px 12px}
+}
+
+/* 超矮屏（≤680px 高）进一步压缩答题屏 */
+@media(max-width:720px) and (max-height:700px){
+  .qtext{margin:4px 0 10px}
+  .opt{min-height:44px;padding:8px 12px}
+  .opts{gap:6px}
+  .autohint{display:none}
+}
+</style>
+</head>
+<body>
+
+<button id="archiveEntry" onclick="App.openArchive()">人物档案</button>
+
+<div class="wrap">
+  <!-- 封面 -->
+  <section id="screen-intro">
+    <span class="seal">正史认证 · v1.1</span>
+    <h1>我是谁转世</h1>
+    <div class="sub">中国历史名人人格原型测评 · 16 位正史人物 · 男女各半</div>
+    <div class="slogan">更好的了解自己，解锁天赋吧</div>
+    <div class="card">
+      <div class="meta-grid">
+        <div>题目：<b>共 48 个单选题</b></div>
+        <div>用时：<b>需要 10 分钟左右</b></div>
+        <div>计分：<b>5 点量表 · 六维 0–100</b></div>
+        <div>输出：<b>主原型 + 雷达图 + 处事解析</b></div>
+      </div>
+      <p style="font-size:14.5px;color:var(--ink2)">基于<b style="color:var(--ink)">大五人格模型（OCEAN）</b>本土化的六个维度，
+      把你的行为倾向与 16 位<b style="color:var(--ink)">正史有传、事迹可考</b>的真实决策者做原型匹配——曹操、诸葛亮、张良、韩信、苏轼、王安石、王阳明、曾国藩，
+      以及吕雉、武则天、长孙皇后、冯太后、李清照、秦良玉、孝庄文皇后、冼夫人。</p>
+      <div class="toc-figures">
+        <span>曹操</span><span>诸葛亮</span><span>张良</span><span>韩信</span>
+        <span>苏轼</span><span>王安石</span><span>王阳明</span><span>曾国藩</span>
+        <span>吕雉</span><span>武则天</span><span>长孙皇后</span><span>冯太后</span>
+        <span>李清照</span><span>秦良玉</span><span>孝庄文皇后</span><span>冼夫人</span>
+      </div>
+      <div class="row" style="justify-content:center">
+        <button class="btn" onclick="App.start()">开 始 测 评</button>
+      </div>
+      <div class="guide"><b>填写说明</b><br>
+      提示：请按“真实的你”而非“理想的你”作答。本测评是自我省察与讨论工具，不是临床诊断或招聘评估；性别不参与计分，男性可匹配武则天，女性可匹配曹操。</div>
+    </div>
+  </section>
+
+  <!-- 答题 -->
+  <section id="screen-quiz" style="display:none">
+    <div class="quiz-head">
+      <div class="progress"><i id="bar"></i></div>
+      <div class="pcount"><span id="pnow">1</span> / 48</div>
+    </div>
+    <div class="card">
+      <div class="qtext" id="qtext"></div>
+      <div class="opts" id="opts"></div>
+      <div class="autohint">点选后自动进入下一题 · 可随时点「上一题」修改</div>
+      <div class="warn" id="warn"></div>
+      <div class="row">
+        <button class="btn ghost" id="btnPrev" onclick="App.prev()">上一题</button>
+        <button class="btn" id="btnNext" onclick="App.next()">下一题</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 结果 -->
+  <section id="screen-result" style="display:none"></section>
+</div>
+
+<!-- 人物档案（全屏覆盖层，左滑右滑切换） -->
+<div id="screen-archive">
+  <div class="arc-head">
+    <button class="btn ghost small" onclick="App.closeArchive()">‹ 返回</button>
+    <div class="t">人物档案</div>
+    <div class="cnt" id="arcCount"></div>
+  </div>
+  <div class="arc-stage" id="arcStage">
+    <div class="arc-track" id="arcTrack"></div>
+    <button class="arc-nav" id="arcPrev" onclick="App.archiveGo(-1)">‹</button>
+    <button class="arc-nav" id="arcNext" onclick="App.archiveGo(1)">›</button>
+  </div>
+  <div class="arc-dots" id="arcDots"></div>
+  <div class="arc-hint" id="arcHint">左滑看下一位 · 右滑看上一位</div>
+</div>
+
+<script type="application/json" id="data-questions">{
+  "version": "1.0",
+  "scale": [1, 2, 3, 4, 5],
+  "scale_labels": ["非常不同意", "不同意", "中立/不确定", "同意", "非常同意"],
+  "dimensions": {
+    "d1": {"name": "变革鼎新", "opposite": "守常稳健", "big5": "开放性 O", "desc": "高分：质疑惯例、敢改旧规、拥抱新方法；低分：尊重经过时间检验的秩序，先立后破。"},
+    "d2": {"name": "严谨规划", "opposite": "灵动随性", "big5": "尽责性 C", "desc": "高分：清单、节点、承诺必达、靠系统取胜；低分：边做边调，在即兴和多线程中出灵感。"},
+    "d3": {"name": "外放进取", "opposite": "内敛沉静", "big5": "外向性 E（含支配性）", "desc": "高分：享受注视、主动争取、当面碰撞；低分：幕后推演、实力说话，野心不靠存在感表达。"},
+    "d4": {"name": "怀柔宽厚", "opposite": "冷峻刚硬", "big5": "宜人性 A", "desc": "高分：先给台阶、读情绪、以信服人；低分：规矩面前无特殊，关键时刻愿付强硬的代价。"},
+    "d5": {"name": "镇定敢赌", "opposite": "慎惧多虑", "big5": "情绪稳定性（N 反向）+ 风险倾向", "desc": "高分：崩盘时更冷静、胜算不足也敢押、决策快；低分：先想退路，以不犯大错为竞争力。"},
+    "d6": {"name": "道义理想", "opposite": "事功务实", "big5": "价值定向（动机理论）", "desc": "高分：义以为上，为信念牺牲实利；低分：结果是硬通货，手段为成效服务。"}
+  },
+  "questions": [
+    {"id": 1,  "dim": "d1", "key": "+", "text": "接手一个运转多年但效率低下的老流程，我的第一反应是重设规则，而不是先沿用看看。"},
+    {"id": 2,  "dim": "d2", "key": "+", "text": "开始一件重要的事之前，我会先把目标、节点和最坏情况写成清单。"},
+    {"id": 3,  "dim": "d3", "key": "+", "text": "人群中我天然是那个定调子、推动大家拍板的人。"},
+    {"id": 4,  "dim": "d4", "key": "+", "text": "处理一个犯了错但处境艰难的人，我倾向于先给台阶、给机会，而不是立刻按规矩办。"},
+    {"id": 5,  "dim": "d5", "key": "+", "text": "胜算不到五成但一旦成功收益极大时，我敢押上重注。"},
+    {"id": 6,  "dim": "d6", "key": "+", "text": "如果一件事在道义上站不住脚，利益再大我也不会做。"},
+
+    {"id": 7,  "dim": "d1", "key": "-", "text": "未经时间检验的新方法，我倾向于先旁观别人用，确认可靠再采用。"},
+    {"id": 8,  "dim": "d2", "key": "-", "text": "计划赶不上变化，我更喜欢边做边调，而不是一开始就把方案定死。"},
+    {"id": 9,  "dim": "d3", "key": "-", "text": "比起站在台前发号施令，我更愿意在幕后把事想透、安排妥当。"},
+    {"id": 10, "dim": "d4", "key": "-", "text": "规矩就是规矩，特殊照顾只会让以后的管理越来越难。"},
+    {"id": 11, "dim": "d5", "key": "-", "text": "没有七八成把握，我不会把身家、团队或信用押进去。"},
+    {"id": 12, "dim": "d6", "key": "-", "text": "只要能解决实际问题，手段是否“好看”我并不太在意。"},
+
+    {"id": 13, "dim": "d1", "key": "+", "text": "当所有人都说“一直都是这么做的”，我反而更想试一试别的做法。"},
+    {"id": 14, "dim": "d2", "key": "+", "text": "我的工作和生活有相对固定的节奏，杂乱和临时起意会让我不舒服。"},
+    {"id": 15, "dim": "d3", "key": "+", "text": "我愿意主动争取资源和机会，哪怕会被人说“野心写在脸上”。"},
+    {"id": 16, "dim": "d4", "key": "+", "text": "团队里我往往是最先察觉谁情绪不对的人，并会主动私下沟通。"},
+    {"id": 17, "dim": "d5", "key": "+", "text": "局势突然崩坏时，我反而能迅速冷静下来，甚至进入更好的状态。"},
+    {"id": 18, "dim": "d6", "key": "+", "text": "我做一件事，更看重它是否符合我认定的理想，而不是它能换来什么。"},
+
+    {"id": 19, "dim": "d1", "key": "-", "text": "制度和规矩既然存在多年，往往有它的道理，我不轻易改动。"},
+    {"id": 20, "dim": "d2", "key": "-", "text": "在“有意思但没安排”和“按计划推进”之间，我常被前者带走。"},
+    {"id": 21, "dim": "d3", "key": "-", "text": "我不喜欢成为全场焦点，实力和结果比存在感更有说服力。"},
+    {"id": 22, "dim": "d4", "key": "-", "text": "关键位置上，我宁用让人畏惧但能成事的人，也不用只让我舒服的人。"},
+    {"id": 23, "dim": "d5", "key": "-", "text": "事情没真正落地之前，我总会反复设想各种失败的可能。"},
+    {"id": 24, "dim": "d6", "key": "-", "text": "空谈原则救不了局面，我更相信结果、实力和实打实的好处。"},
+
+    {"id": 25, "dim": "d1", "key": "+", "text": "我愿意为一个没有先例的想法，承担失败后被质疑的代价。"},
+    {"id": 26, "dim": "d2", "key": "+", "text": "答应别人的事，我宁可加班也要按时按质交付。"},
+    {"id": 27, "dim": "d3", "key": "+", "text": "公开表达、被很多人注视，会让我兴奋而不是紧张。"},
+    {"id": 28, "dim": "d4", "key": "+", "text": "我相信“让人服气”比“让人害怕”长期更有力量。"},
+    {"id": 29, "dim": "d5", "key": "+", "text": "我做重大决定的速度比身边大多数人快，而且事后很少反复后悔。"},
+    {"id": 30, "dim": "d6", "key": "+", "text": "我愿意为一个长远信念，牺牲眼前的安逸、功名甚至安全。"},
+
+    {"id": 31, "dim": "d1", "key": "-", "text": "面对变革，我更担心“把现在的安稳弄丢了”，而不是“错过未来的机会”。"},
+    {"id": 32, "dim": "d2", "key": "-", "text": "细节和格式差不多就行，我更愿意把精力放在大方向上。"},
+    {"id": 33, "dim": "d3", "key": "-", "text": "重要决定我宁可自己反复推演，也不想通过热闹的会议来定。"},
+    {"id": 34, "dim": "d4", "key": "-", "text": "如果有人评价我“心狠”，我会认为那是关键时刻必须支付的代价。"},
+    {"id": 35, "dim": "d5", "key": "-", "text": "面对千载难逢的机会，我仍会先想清楚退路再行动。"},
+    {"id": 36, "dim": "d6", "key": "-", "text": "规则和口号都可以调整，能不能把事办成才是硬标准。"},
+
+    {"id": 37, "dim": "d1", "key": "+", "text": "评价一件新事物，我习惯先看它可能带来什么，而不是先挑它的风险。"},
+    {"id": 38, "dim": "d2", "key": "+", "text": "我习惯用数据、记录和书面信息说话，不喜欢只凭印象判断。"},
+    {"id": 39, "dim": "d3", "key": "+", "text": "遇到争论，我会直接亮出观点，当面碰撞比背后揣测高效。"},
+    {"id": 40, "dim": "d4", "key": "+", "text": "为了照顾大局和他人的感受，我愿意暂时按下自己的委屈。"},
+    {"id": 41, "dim": "d5", "key": "+", "text": "被推到悬崖边时，我倾向于主动出击，而不是收缩防守。"},
+    {"id": 42, "dim": "d6", "key": "+", "text": "评价一个人，我先看他的原则和底线，再看他的本事。"},
+
+    {"id": 43, "dim": "d1", "key": "-", "text": "我更佩服把成熟方法做到极致的人，而不是另起炉灶的人。"},
+    {"id": 44, "dim": "d2", "key": "-", "text": "同时处理几件事、随时切换上下文，我不觉得是负担。"},
+    {"id": 45, "dim": "d3", "key": "-", "text": "别人眼里我话不多，但我认为该出手时我绝不含糊。"},
+    {"id": 46, "dim": "d4", "key": "-", "text": "情感和私人关系不应影响我对人和事的判断。"},
+    {"id": 47, "dim": "d5", "key": "-", "text": "我认为“不犯大错”本身就是一种被低估的竞争力。"},
+    {"id": 48, "dim": "d6", "key": "-", "text": "我更佩服让团队和百姓真正得到实惠的人，而不是道德文章写得漂亮的人。"}
+  ]
+}
+</script>
+<script type="application/json" id="data-figures">{
+  "version": "1.0",
+  "dimensions": [
+    "d1",
+    "d2",
+    "d3",
+    "d4",
+    "d5",
+    "d6"
+  ],
+  "figures": [
+    {
+      "id": 1,
+      "name": "曹操",
+      "gender": "男",
+      "era": "东汉末",
+      "role": "政治家 · 军事家 · 诗人",
+      "source": "《三国志·魏书·武帝纪》《让县自明本志令》",
+      "scores": [
+        65,
+        55,
+        88,
+        28,
+        85,
+        25
+      ],
+      "tagline": "乱世的结账人",
+      "verdict": "你测出曹操，意味着：在资源不足、规则失灵的局面里，你是那个敢接管现实、并且真能把局面结清的人。",
+      "style": [
+        "决策：先问“怎么赢”，再问“怎么赢得体面”。信息不全也敢拍板——官渡奇袭乌巢，五千人烧粮，把全部筹码押在行动上。",
+        "用人：唯才是举。人品有瑕疵但能解决问题的人先用，忠诚与道德是第二道筛选项。",
+        "逆境：赤壁败走路上还能连笑三声、分析为什么输。崩盘时你反而进入最好的状态。",
+        "人际：魅力和威慑都极强，但“我负人”的阈值低——杀边让、孔融，逼死荀彧，代价真实存在。",
+        "深层：你并非没有理想，只是早早认定：乱世里，活着和统一本身就是最大的道义。"
+      ],
+      "anchors": [
+        "三下求才令，“负污辱之名”而能治国用兵者一概举用（《三国志·武帝纪》）。",
+        "官渡之战奇袭乌巢，以弱吞强（《三国志·武帝纪》）。",
+        "《让县自明本志令》：“设使国家无有孤，不知当几人称帝，几人称王。”"
+      ],
+      "blind": [
+        "身边人怕你多于信你。高效但高恐惧的组织，你在场时无敌，你不在场时容易散。",
+        "手段透支信用——你赢下所有战役，却要花一生证明自己“不称帝”。",
+        "低怀柔让你低估“被善待过的人”在长期的复利。"
+      ],
+      "advice": [
+        "每季度复盘一次“我是否辜负了某个不该辜负的人”，写名字，不写抽象的“团队”。",
+        "把至少一个关键岗位交给你“不喜欢但他能制衡你”的人。",
+        "提前写好“赢与正确冲突时”的红线——临场的你，一定会劝自己破例。"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "诸葛亮",
+      "gender": "男",
+      "era": "三国蜀",
+      "role": "丞相",
+      "source": "《三国志·诸葛亮传》《出师表》",
+      "scores": [
+        58,
+        95,
+        40,
+        68,
+        30,
+        95
+      ],
+      "tagline": "以一人之纪律，托一国之理想",
+      "verdict": "你测出诸葛亮，意味着：你是那种把“不可为之事”变成日程表的人。力量不在奇在稳，不在赢一时在撑得久。",
+      "style": [
+        "决策：不打无准备之仗。否定子午谷奇谋不是看不懂，是不肯把国运押在五千人的运气上。",
+        "执行：政事无巨细咸决于你，罚二十杖以上亲自过目。制度、账册、流程是安全感，也是武器。",
+        "用人：赏罚必信。被你废黜的廖立、李严，闻你死讯或哭或叹——被罚的人也服你，因为他们知道你无私。",
+        "逆境：夷陵之后蜀汉最弱，你用五次北伐、堰官、蜀锦贸易把一个必亡的局硬撑十年以上。",
+        "深层：发动机是“兴复汉室”这个近乎信仰的念头，身后内无余帛、外无赢财——你真的信。"
+      ],
+      "anchors": [
+        "《前出师表》“鞠躬尽力，死而后已”；治蜀“科教严明，赏罚必信”（陈寿评）。",
+        "拒魏延子午谷奇谋，北伐求万全（《三国志·魏延传》）。",
+        "身后“内无余帛，外无赢财”（《诸葛亮传》）。"
+      ],
+      "blind": [
+        "事必躬亲会耗死你，也让组织长不出第二个你——“蜀中无大将”与此直接相关。",
+        "零容错的风险观让你不大败，也永远等不到“五五开但赢了翻盘”的机会。",
+        "高理想让你容易用自己的道德强度要求别人，团队可敬你而难亲你。"
+      ],
+      "advice": [
+        "列“我不在了这件事谁能做”清单——如果答案全是你，那不是组织，是你一个人的徭役。",
+        "每半年批准一次“胜算六成”的决定，练习与可控的不确定共处。",
+        "把理想翻译成成员各自的小目标，别默认他们共享你的信仰级动机。"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "张良",
+      "gender": "男",
+      "era": "秦汉之际",
+      "role": "谋臣",
+      "source": "《史记·留侯世家》",
+      "scores": [
+        60,
+        82,
+        25,
+        62,
+        80,
+        55
+      ],
+      "tagline": "算无遗策，也退得最漂亮",
+      "verdict": "你测出张良，意味着：你是组织里存在感最低、但所有关键转折都有你影子的人。你谋事，更谋身。",
+      "style": [
+        "决策：永远准备多套剧本。鸿门宴是提前一晚布好的连环局：项伯、樊哙、遁词、玉斗，步步有后手。",
+        "权力观：功成时别人抢三万户，你自选留侯；天下一定立刻“愿弃人间事，从赤松子游”。",
+        "风险：弟死不葬、散家财买勇士，120 斤铁椎砸向秦始皇副车——你不是胆小，是只在算清赔率时出手。",
+        "沟通：从不硬顶刘邦，用对方听得进的句式影响他，让他以为那是他自己的主意。",
+        "深层：你的抱负通过“让事情成”实现，而不是通过“让人知道是我”实现。"
+      ],
+      "anchors": [
+        "博浪沙刺秦，天下震动（《留侯世家》）。",
+        "鸿门宴连环布局救刘邦（《史记·项羽本纪》）。",
+        "蹑足刘邦背、请封韩信为齐王，稳住决战时刻最大变量；功成身退。"
+      ],
+      "blind": [
+        "算得太清，容易错过“不算账也值得”的事——你救得了刘邦，未必留得下精神遗产。",
+        "过度自全会让团队在需要你扛雷时找不到你。",
+        "长期低存在感会真实地减少你的资源分配——你不屑哭，但奶真的会少。"
+      ],
+      "advice": [
+        "一年至少一次，为一件“算不过账但该有人做”的事公开站出来。",
+        "关键决策后让贡献被看见一次：不邀功，但要留痕，防止能力被组织记忆低估。",
+        "检查你的退场计划：它是战略，还是回避深度权力关系的借口？"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "韩信",
+      "gender": "男",
+      "era": "秦汉之际",
+      "role": "军事家",
+      "source": "《史记·淮阴侯列传》",
+      "scores": [
+        80,
+        38,
+        80,
+        40,
+        55,
+        40
+      ],
+      "tagline": "战场上的神，牌桌上的生手",
+      "verdict": "你测出韩信，意味着：在你真正擅长的专业领域里，你是可以无视教科书的天才；但一离开专业场域，你对规则的生疏近乎天真。",
+      "style": [
+        "专业决策：敢反一切教条。背水列阵，一万新兵对赵二十万，赢了还解释“置之死地而后生”。",
+        "自我认知：极度清楚自己值多少，当面跟刘邦说自己将兵“多多益善”——是事实，也是祸根。",
+        "人生关键处：三次犹豫。拒蒯通三分天下之议，又矜功怨望，被逼到墙角才下决心，时机已过。",
+        "恩仇观：一饭千金、封胯下少年为中尉，有朴素高贵的江湖道义，只是这道义不对帝王胃口。",
+        "深层：你以为规则是“谁有本事谁上”，帝王的规则是“谁有本事谁危险”。"
+      ],
+      "anchors": [
+        "背水一战破赵（《淮阴侯列传》）。",
+        "潍水杀龙且、十面埋伏灭项羽（《淮阴侯列传》）。",
+        "拒蒯通三分天下之议，终死于长乐钟室（《淮阴侯列传》）。"
+      ],
+      "blind": [
+        "专业能力越强，越容易误以为“我业务好，政治规则会为我让路”——它不会。",
+        "你的忠诚是真的，但姿态让上位者读成威胁：功劳、年轻、地盘、能打，你全占。",
+        "随性意味着你的人生没有 B 计划，赌注全压在“对方讲道理”上。"
+      ],
+      "advice": [
+        "拿研究业务一半的力气研究组织权力地图：谁怕你、谁需要你、谁能替你说话。",
+        "升职后第一件事是重建表达系统：把“我比你强”翻译成“我们怎么一起赢”。",
+        "提前写好“被误解”预案，别在委屈到极点时才第一次想退路。"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "苏轼",
+      "gender": "男",
+      "era": "北宋",
+      "role": "文学家 · 地方官",
+      "source": "《宋史·苏轼传》《东坡志林》",
+      "scores": [
+        88,
+        35,
+        78,
+        85,
+        82,
+        60
+      ],
+      "tagline": "把所有贬谪路走成美食地图的人",
+      "verdict": "你测出苏轼，意味着：创造力和共情力是你稀缺的配置；你对抗命运的方式不是硬扛，是把任何烂日子过出滋味。",
+      "style": [
+        "做事：拒绝标准答案。写诗、填词、做菜、治水、办医院，进每个领域都带着“为什么不能这样”的有效天真。",
+        "对人：上陪皇帝、下陪农夫都自在；杭州安乐坊、黄州救溺婴、惠州捐犀带修桥，宽厚是真金白银。",
+        "逆境：乌台诗案几乎死罪，出狱又写诗；黄州发明东坡肉，惠州“日啖荔枝三百颗”，儋州教书开化当地。",
+        "立场：新党上台批新党，旧党上台批旧党——“一肚皮不合时宜”，为两头不讨好付了一生代价。",
+        "深层：你的情绪稳定不是装的，是真相信“也无风雨也无晴”。"
+      ],
+      "anchors": [
+        "杭州苏堤、安乐坊，徐州防洪（《宋史·苏轼传》及东坡奏议）。",
+        "乌台诗案后黄州、惠州、儋州三贬及同期大量名作。",
+        "《定风波》：“回首向来萧瑟处，归去，也无风雨也无晴。”"
+      ],
+      "blind": [
+        "你对钱和风险的漫不经心，需要爱你的人替你买单（苏辙多次为你破财）。",
+        "太快原谅处境、太会自我开解，组织可能因此从不认真补偿你。",
+        "“不合时宜”在道德上高贵，在改革窗口期可能等于两头的力都没借到。"
+      ],
+      "advice": [
+        "找一个严谨规划型搭档，把财务和风险预案外包——这是你人生最值的一笔外包。",
+        "善良要记账：捐出的时间和钱写下来，别年底发现自己颗粒无收。",
+        "必须站队的窗口期，允许自己“暂时站一边”，灵活不等于背叛自我。"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "王安石",
+      "gender": "男",
+      "era": "北宋",
+      "role": "宰相 · 改革家",
+      "source": "《宋史·王安石传》《临川集》",
+      "scores": [
+        92,
+        80,
+        55,
+        25,
+        60,
+        96
+      ],
+      "tagline": "看见未来的人，往往输给当代",
+      "verdict": "你测出王安石，意味着：你是那种先看见十年后的世界、再要求今天所有人立刻跟你走的人。悲剧和伟大都在“立刻”。",
+      "style": [
+        "决策：从顶层重设系统。均输、青苗、募役、市易、保甲、方田均税，一次性重建国家财政与社会组织。",
+        "信念：“天变不足畏，祖宗不足法，人言不足恤。”满朝师友反对，你解读为他们境界不够。",
+        "方法：懂试点（鄞县青苗雏形）也懂专设机构（制置三司条例司）——你不是空想家，是被正确感催得太快的实践家。",
+        "自我管理：生活极简到不应酬、不结党、不贪财。没有私敌意识，所以也从不想别人为什么恨你。",
+        "深层：你自认为是最纯粹的儒家，失败是因为对手和时代配不上你的理想。"
+      ],
+      "anchors": [
+        "《上仁宗皇帝言事书》系统陈述变法哲学（《临川集》）。",
+        "熙宁二年起十余项新法次第颁布（《宋史·王安石传》）。",
+        "青苗法在执行中被扭曲为强制抑配，成变法最大伤口（《宋史·食货志》）。"
+      ],
+      "blind": [
+        "“方案正确”不等于“这帮人、这个时间点能执行”——吕惠卿式的执行者给变法埋雷。",
+        "把所有反对者定义为“流俗”，司马光、苏轼、欧阳修全从朋友变成对手，亲手拆光联盟基础。",
+        "零过渡设计：受损者拿不到缓冲，反弹强度必然爆表。"
+      ],
+      "advice": [
+        "每个大方案强制写“谁会受损、怎么补偿他”一章，写不出就不许推。",
+        "找你最烦的“保守派”做预评审，他提的十条里通常有三条是真问题。",
+        "把“三年完成”改成“先两个试点、六个月、看数据”——你的想法值得被做成，而不只是被证明。"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "王阳明",
+      "gender": "男",
+      "era": "明",
+      "role": "思想家 · 军事家",
+      "source": "《明史·王守仁传》《传习录》",
+      "scores": [
+        85,
+        72,
+        66,
+        80,
+        88,
+        72
+      ],
+      "tagline": "心有雷霆，面若春阳",
+      "verdict": "你测出王阳明，意味着：你同时是思想家和行动派，相信“知道而做不到，等于不知道”。临大事时你是整个房间里最静的人。",
+      "style": [
+        "决策：先正心后用兵。宁王蓄谋十年起兵，你无一诏一兵，先用假情报反间拖住对手十几天，再临时聚兵，43 天平叛。",
+        "组织：到地方先办团练、行十家牌法、定赏罚格——心学看着玄，落地全是极硬的组织设计。",
+        "服人：能抚则抚，叛酋招降后真用；对刘瑾只避不骂。宽厚来自“良知”哲学，不是策略，却比策略更持久。",
+        "教育：打仗路上也讲学，主张“事上磨炼”——放到今天仍是最好的管理培训观。",
+        "深层：你的高敢赌和高怀柔来自同一个源头：此心不动，随机而动。"
+      ],
+      "anchors": [
+        "龙场悟道，提出“知行合一”“致良知”（《传习录》《明儒学案》）。",
+        "43 天平定宁王宸濠之乱（《明史·王守仁传》）。",
+        "临终：“此心光明，亦复何言。”"
+      ],
+      "blind": [
+        "太能“内求”，容易把结构性问题也归因到心性——不是所有恶都靠致良知解决。",
+        "功高遭忌：每解决一个烂摊子，朝廷反而防你；你应对得太从容，旁人甚至以为你没受委屈。",
+        "思想最容易被后人简化成心灵鸡汤——而你本人最反空谈。"
+      ],
+      "advice": [
+        "区分“我能消化的情绪”和“组织必须改的规则”：前者用心学，后者用王安石。",
+        "战功要主动留档、向上沟通——沉默会让贡献被稀释。",
+        "除了“悟”，给自己留一块纯靠流程兜底的业务。"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "曾国藩",
+      "gender": "男",
+      "era": "清",
+      "role": "理学家 · 统帅",
+      "source": "《清史稿·曾国藩传》《曾文正公家书》",
+      "scores": [
+        35,
+        96,
+        45,
+        55,
+        40,
+        85
+      ],
+      "tagline": "结硬寨，打呆仗，走到最后",
+      "verdict": "你测出曾国藩，意味着：你不信天才，信日课。全部成就都是用“笨办法 + 不停”熬出来的，而且你熬赢了所有比你聪明的人。",
+      "style": [
+        "做事：先看地形、扎硬墙、挖深沟，“结硬寨、打呆仗”，不追求漂亮仗，只追求不输。",
+        "自律：三十年日课——早起、静坐、读经、日记里每天骂自己，把自我管理做成可复制系统并教给全家。",
+        "用人：保举极慷慨、对同僚极谦卑；选人首重朴实耐劳，不要官气浮滑。湘军是价值观加利益双绑定从零搭的。",
+        "逆境：靖港、湖口大败两次投水被救起，一道“屡败屡战”的奏折接着打——核心能力是输完不散架。",
+        "底线之痛：天津教案为不启战端而妥协，“外惭清议，内疚神明”，一年后郁郁而终。"
+      ],
+      "anchors": [
+        "《讨粤匪檄》以卫道起兵，湘军十余年灭太平天国（《清史稿》）。",
+        "《家书》《日记》中的日课体系。",
+        "创办安庆内军械所、促成幼童留美，洋务第一推手。"
+      ],
+      "blind": [
+        "守成气质让你总慢半拍看见新变量——办洋务是被现实逼的，不是主动看见的。",
+        "高自律的人容易对他人也隐性苛刻，团队稳但未必快乐。",
+        "过度自省有成本：你日记里的自我攻击密度，换成今天是需要咨询的级别。"
+      ],
+      "advice": [
+        "每年把 10% 资源投给你看不上但年轻人兴奋的事，强制开“创新预算”。",
+        "日课里加配额：每天必须写一件自己做得好的事，防止自省滑向自我消耗。",
+        "原则与现实冲突前先想“天津时刻”：妥协可以，但先想清楚能不能承受那个名声。"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "吕雉",
+      "gender": "女",
+      "era": "西汉",
+      "role": "皇后 · 称制者",
+      "source": "《史记·吕太后本纪》",
+      "scores": [
+        45,
+        62,
+        70,
+        18,
+        82,
+        28
+      ],
+      "tagline": "皇权真空期里第一个把印章握稳的女人",
+      "verdict": "你测出吕雉，意味着：在秩序崩塌、男人都慌了的时刻，你是那个先稳住局面再说的人。你对“安稳”的执念深到可以支付任何道德代价。",
+      "style": [
+        "决策：危机中行动极快。刘邦刚死，四天秘不发丧，盘算要不要把功臣集团一锅端——敢把这选项放上桌的人不多。",
+        "除患：对潜在威胁零容忍且手法精密。诛韩信是与萧何合谋、利用他本人的信任；杀彭越先废再诱、斩草除根。",
+        "治理：对敌人是噩梦，对民生是好执政。称制期间休养生息、减赋宽刑，司马迁以《本纪》规格写你。",
+        "失误：把家族利益（诸吕封王）架在开国契约（白马之盟“非刘不王”）之上，你一死安排立刻崩盘，吕家族灭。",
+        "深层：你所有残酷的底层目标其实是“不要再乱”——这让你既是功臣的噩梦，也是百姓的好年景。"
+      ],
+      "anchors": [
+        "《史记·吕太后本纪》——正史中女性独享“本纪”的司马迁级认证。",
+        "与萧何谋诛韩信于长乐钟室；诛彭越（《淮阴侯列传》《魏豹彭越列传》）。",
+        "太史公曰：“政不出房户，天下晏然……民务稼穑，衣食滋殖。”"
+      ],
+      "blind": [
+        "把“对威胁残酷”当通用解法，会制造更多恐惧型敌人——你死后没人愿意保吕家。",
+        "能设计一次完美的诛杀，却设计不出让各方下台阶的长期制度。",
+        "低怀柔在权力真空期是优点，在承平期会迅速贬值。"
+      ],
+      "advice": [
+        "每次“清除风险”前，强制再列一条“收编风险”的方案，成本写清再动手。",
+        "给组织留下不依赖你和家族的继承安排——继承方案不能只有你家这一版。",
+        "区分“这个人威胁我”和“这个人让我不舒服”，后者请用怀柔处理。"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "武则天",
+      "gender": "女",
+      "era": "唐/武周",
+      "role": "皇帝",
+      "source": "《旧唐书·则天皇后本纪》《资治通鉴》",
+      "scores": [
+        88,
+        58,
+        95,
+        22,
+        88,
+        30
+      ],
+      "tagline": "向整个秩序要皇位，并且要到了",
+      "verdict": "你测出武则天，意味着：你是本测评里权力意志和重构能力最满格的一档。你要一样东西，会先重写让它不合法的那套规则。",
+      "style": [
+        "夺权：感业寺回宫、废王立武、二圣临朝、称帝——每步胜率不明、输即灭族，你连押五次全赢。",
+        "建制：殿试亲策贡士、开武举、许自荐试官、重订《姓氏录》打垮关陇门第，重造人才上升通道，姚崇宋璟都出自你朝。",
+        "肃反：铜匦告密、酷吏是你亲手搭的机器；机器用完即弃，来俊臣们最终也被抛出去平众怒——从不对工具产生感情。",
+        "识人：对政敌冷硬到极点，对狄仁杰却信到底、吵完还听。恩是精准投放，不是普降。",
+        "收场：被逼退位前去帝号、归乾陵、立无字碑——你用最后一个动作承认秩序要还，但你坐过，这件事改不掉了。"
+      ],
+      "anchors": [
+        "载初元年殿试亲策贡士；长安二年置武举（《旧唐书》《新唐书·选举志》）。",
+        "快速平定徐敬业扬州起兵；读《讨武曌檄》反惜骆宾王才（《资治通鉴》）。",
+        "无字碑现存乾陵；去帝号归葬以“则天大圣皇后”收场（《旧唐书》）。"
+      ],
+      "blind": [
+        "酷吏政治消耗整个官僚系统的信任：你在，系统怕而高效；你一走，反弹极烈。",
+        "继承问题到死没解决顺——儿子被废怕了，侄子没有合法性，帝国注定一代而终。",
+        "高支配让你看不见“不用赢的关系”：把太多可以合作的人逼成必须消灭的人。"
+      ],
+      "advice": [
+        "为继任者设计一条不需要成为你也能运转的路——个人能力越强，这项设计越紧急。",
+        "给高压管理设使用上限：恐吓机器每年必须公开纠偏一次，防止它长出自己的生命。",
+        "练习在亲密关系里不掌权：你最缺的练习是“这一局我可以输”。"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "长孙皇后",
+      "gender": "女",
+      "era": "唐初",
+      "role": "皇后",
+      "source": "《旧唐书·后妃传》《贞观政要》",
+      "scores": [
+        42,
+        80,
+        22,
+        90,
+        68,
+        85
+      ],
+      "tagline": "用温柔完成所有硬约束",
+      "verdict": "你测出长孙皇后，意味着：你从不坐上主位，但让主位上的人持续做出更好的决定。你的克制是技术，不是性格。",
+      "style": [
+        "进谏工艺：李世民暴怒要杀人、恨魏征时，你不当面硬顶，等气消了用他听得进的逻辑慢慢转。",
+        "压制自家：主动劝哥哥长孙无忌逊权防外戚坐大——你太清楚“皇后家族”四个字在历史上的死亡率。",
+        "关键时刻：玄武门之变当天亲临军前勉慰将士、亲授甲胄——温柔的人敢站在灭门级现场，因为你算过这天不能退。",
+        "身后安排：遗言薄葬、因山为陵，劝太宗“亲君子、远小人、纳忠谏、省徭役”，连自己的死都用来完成最后一次进谏。",
+        "深层：你的怀柔有明确的政治理想托底，温柔是信念的表达方式，不是软弱。"
+      ],
+      "anchors": [
+        "劝太宗纳魏征直谏：“主明臣直”（《贞观政要》）。",
+        "力抑长孙无忌权位；玄武门亲慰将士（《旧唐书·后妃传》）。",
+        "遗言薄葬与施政劝诫（《旧唐书》《资治通鉴》）。"
+      ],
+      "blind": [
+        "影响力绑定在一个人听不听你的话上，他一旦不听，你的体系没有第二个抓手。",
+        "长期压低存在感，会让外人误判你的能量，进而误判你支持的人和事。",
+        "高自我克制的人容易把“我需要”三个字也删掉——亲密的人未必知道你支付了什么。"
+      ],
+      "advice": [
+        "把判断写成文字留档，降低对“他正好在听”的依赖。",
+        "培养一个能替你在台前说话的人，别让影响力只走一条通道。",
+        "每年有一次直接表达“这件事我想要”，不用铺垫、不用等他高兴。"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "冯太后",
+      "gender": "女",
+      "era": "北魏",
+      "role": "临朝执政",
+      "source": "《魏书·皇后传》《魏书·食货志》",
+      "scores": [
+        90,
+        75,
+        78,
+        45,
+        80,
+        52
+      ],
+      "tagline": "真正启动“太和改制”的人",
+      "verdict": "你测出冯太后，意味着：你是最被大众低估的一类顶级执政者——改得动根本制度，下得去狠手，还能让改革在自己死后继续走。",
+      "style": [
+        "改革次序：班禄制（发俸禄顺手治贪）→ 均田制（按口授田）→ 三长制（重建编户）。先赎买既得利益者，再动土地，最后改基层。",
+        "你比王安石早八百年想明白“受损者要有补偿”，配套设计让太和改制真正落地，直接影响隋唐均田与租庸调。",
+        "夺权：诛权臣乙浑首次临朝；献文帝收权、蹊跷暴崩后以铁腕再回权力中心，两次上位稳准狠（献文帝之死史无实据，存疑不取）。",
+        "育人：把孝文帝从小养在身边、按汉化改革者规格教育——你最成功的作品不是一条法令，是一个会把改革推完的皇帝。",
+        "两面性：对政敌不留情，对编户齐民给活路，均田、乡学、宽工商，两头都做到极致。"
+      ],
+      "anchors": [
+        "太和八年班禄、九年均田、十年三长（《魏书·食货志》《皇后传》）。",
+        "诛乙浑、两度临朝（《魏书·皇后传》）。",
+        "亲作《劝戒歌》《皇诰》，抚育训导孝文帝（《魏书·高祖纪》）。"
+      ],
+      "blind": [
+        "铁腕的上位过程（献文帝之死疑云）是改革信用的永久污点，会被反对者反复使用。",
+        "改革深度依赖你的个人权威和皇帝的孝顺两根软绳，继承者一变心方向就动摇。",
+        "你需要扮演一个“不像女人也不像汉人”的角色，双重表演的成本只有你自己知道。"
+      ],
+      "advice": [
+        "重大决策过程留书面档，让“为什么这么干”不依赖你个人的解释权。",
+        "接班人之外，再培养反对派的合法通道——改革需要的是可被修正，不是可被翻案。",
+        "承认“表演强势”的情绪成本，给自己留一段不用扮演任何角色的关系。"
+      ]
+    },
+    {
+      "id": 13,
+      "name": "李清照",
+      "gender": "女",
+      "era": "两宋之际",
+      "role": "词人",
+      "source": "《金石录后序》《词论》《投内翰綦公崈礼启》",
+      "scores": [
+        90,
+        30,
+        75,
+        55,
+        62,
+        50
+      ],
+      "tagline": "敢给整个词坛立规矩，也敢告丈夫",
+      "verdict": "你测出李清照，意味着：你的天赋是真的，你的锋利也是真的。你不讨好时代给女性写的任何一个剧本。",
+      "style": [
+        "专业霸气：一篇《词论》把本朝名公挨个点评——柳永“词语尘下”、苏轼的词是“句读不葺之诗”，你不是参与词坛，是给词坛立法。",
+        "爱的方式：与赵明诚赌书泼茶、共校金石；乱世中一个女人押运十五车文物南下，把“我们的事业”看得比命重。",
+        "止损狠劲：发现张汝舟图文物且施暴，宁肯依宋律“妻告夫徒二年”也要起诉离婚，坐牢九日也离。",
+        "至暗：你也写“寻寻觅觅，冷冷清清，凄凄惨惨戚戚”——不是无坚不摧，是被击碎后用词句把自己一片片粘回去。",
+        "深层：你的道义不在礼教，在文化认同和做人的真——“生当作人杰，死亦为鬼雄”。"
+      ],
+      "anchors": [
+        "《词论》（见《苕溪渔隐丛话》等宋人选引）。",
+        "《金石录后序》——亲笔写下的战乱、文物与婚姻史。",
+        "诉张汝舟离婚、系狱九日（《投内翰綦公崈礼启》）。"
+      ],
+      "blind": [
+        "对人的判断远弱于对文本的判断：看得透词，看不透张汝舟——审美天才和人生风控是两套系统。",
+        "随性的生活在和平期是风流，在战乱期直接变成损失（文物一路散失）。",
+        "锋利让你痛快，也让你在需要结盟的圈层里缺少帮你说话的人。"
+      ],
+      "advice": [
+        "重大人生决定（婚姻、财产、合作）强制设“冷静期 + 现实朋友尽调”，别让审美判断越权。",
+        "给作品和藏品做“战火预案”：备份、托管、数字化清单，今天就做。",
+        "留三五个你骂不还口、遇事真能帮你的关系——天才也需要俗人网络。"
+      ]
+    },
+    {
+      "id": 14,
+      "name": "秦良玉",
+      "gender": "女",
+      "era": "明末",
+      "role": "女将 · 石柱土司",
+      "source": "《明史·秦良玉传》",
+      "scores": [
+        48,
+        88,
+        58,
+        58,
+        75,
+        90
+      ],
+      "tagline": "正史名将列传里唯一的女人",
+      "verdict": "你测出秦良玉，意味着：你是“忠”和“专业主义”的合体——治军严到骨头里，明知是死局，诏令一到照样出兵。",
+      "style": [
+        "治军：白杆兵号令森严、山地白蜡长枪配钩环自制装备，行伍“戎伍肃然”，打的是体系仗不是个人英雄仗。",
+        "勤王：后金围北京，千里入卫、自备军粮；浑河之战数千川军硬抗八旗，大部战死不退——算得清是消耗战，仍然来。",
+        "抗争：功劳被排挤、友军不配合，直接上奏疏跟总兵叫板；崇祯平台召见赐诗，你受之坦然——该争的体面当仁不让。",
+        "家族：丈夫被冤死，按法袭职不反不乱；兄弟战死，带族中女眷续战。",
+        "结局：明亡后死守石柱不附张献忠，临终诫孙“不可负国”。"
+      ],
+      "anchors": [
+        "《明史·秦良玉传》——正史将相列传中罕见的女性单传。",
+        "浑河血战、千里勤王（《明史》《石砫厅志》）。",
+        "崇祯平台赐诗：“世间不少奇男子，谁肯沙场万里行。”"
+      ],
+      "blind": [
+        "忠于一个正在崩的系统，意味着专业常被浪费——你打赢过很多战役，救不了一个组织。",
+        "高纪律的人容易把“我能扛”当默认设置，部下和家人的极限未必跟你一样。",
+        "对上级的信任历史回报极低：你多次被友军和朝堂辜负。"
+      ],
+      "advice": [
+        "把“忠”重新定义为对使命和团队，而非某个组织符号——系统沉没时，你的人比旗帜更值得保。",
+        "接必死任务前把交换条件谈在前面（粮饷、授权、救兵），忠不是免费的。",
+        "主动安排休整和替补——专业主义也包括让组织活到下一战。"
+      ]
+    },
+    {
+      "id": 15,
+      "name": "孝庄文皇后",
+      "gender": "女",
+      "era": "清初",
+      "role": "太后",
+      "source": "《清史稿·后妃传》《清实录》",
+      "scores": [
+        50,
+        78,
+        30,
+        78,
+        85,
+        65
+      ],
+      "tagline": "所有事都发生在她名字之外",
+      "verdict": "你测出孝庄，意味着：你是最高级的那种权力者——从不坐主位，但主位上的每个重大决定背后都有你的手。你拿时间当武器。",
+      "style": [
+        "布局：皇太极猝死、帝位空悬，你运作幼子福林继位，让多尔衮、豪格两大军事集团互相制衡。",
+        "忍耐：多尔衮摄政七年，尊号一路加到“皇父摄政王”，你带着小皇帝一让再让，等他猝死那一天一夜翻盘。（“太后下嫁”为史学疑案，证据不足，不采信。）",
+        "选人：顺治早逝，你坚持选已出过天花、有免疫力的玄烨继位，并设四大臣辅政互相牵制——一个决定换来在位最久的皇帝。",
+        "育人：康熙的教育你一手盯出，擒鳌拜他在你注视下演练布库少年；三藩乱起你发后宫金帛犒军。",
+        "姿态：终身不垂帘、拒上尊号——你对权力的理解是：拥有它，而不显示拥有它。"
+      ],
+      "anchors": [
+        "福林继位与多尔衮摄政期的权力平衡（《清史稿·后妃传》）。",
+        "坚持立玄烨，天花免疫为关键因素（《清圣祖实录》、汤若望回忆）。",
+        "平三藩时发内帑犒军（《清史稿》）。"
+      ],
+      "blind": [
+        "方法高度依赖寿命和耐心——对手如果更年轻、更能熬，剧本不成立。",
+        "功劳都挂在儿孙名下，组织史会低估你；被辅佐者也未必扛得住“我都是靠奶奶”的叙事。",
+        "幕后角色让你几乎没有自己的公开班底，出手仍要借皇帝的名义。"
+      ],
+      "advice": [
+        "关键节点让判断显性化一次（纪要、私档），防止历史和组织把你删干净。",
+        "培养自己的直系班底，哪怕两三个人，不能永远用别人的手。",
+        "教你辅佐的人独立承受成功，适时明确告诉他：这是你的决定，不是我的。"
+      ]
+    },
+    {
+      "id": 16,
+      "name": "冼夫人",
+      "gender": "女",
+      "era": "梁陈隋",
+      "role": "岭南首领 · 谯国夫人",
+      "source": "《隋书·列女传·谯国夫人》《北史》",
+      "scores": [
+        62,
+        72,
+        50,
+        88,
+        78,
+        80
+      ],
+      "tagline": "三朝封诰，一颗好心",
+      "verdict": "你测出冼夫人，意味着：你是天生的区域稳定器——在所有人都想自立为王的乱世，你三次选择归附，用个人威望替岭南百姓挡住战火。",
+      "style": [
+        "判大势：梁、陈、隋三次改朝换代，你都看清“割据的代价由百姓支付”，压服部众归附中央。",
+        "最有资本自立时（陈亡后岭南奉为“圣母”、隋军压境）选择归隋——这是克制，不是软弱。",
+        "平叛章法：识破李迁仕诱骗，亲率千余人伪装送礼突入敌营；平欧阳纥、王仲宣皆先联络再出兵、战后安抚，从不滥杀。",
+        "治理：约束俚族遵从汉礼、推动俚汉融合；三朝赐物各藏一库——那是政治档案，开会就拿出来训示子孙“尽忠的对象是秩序本身”。",
+        "公私分明：亲孙冯暄违令逗留，直接下狱，另派孙子出战，事后再给机会。信条：“我事三代主，唯用一好心。”"
+      ],
+      "anchors": [
+        "《隋书·列女传·谯国夫人》《北史·列女传》有专传。",
+        "伪装犒军突袭李迁仕；三朝归附（《隋书》《资治通鉴》）。",
+        "封谯国夫人，开幕府、置长史，给印信可调部落六州兵马。"
+      ],
+      "blind": [
+        "“归附”策略的前提是中央政权值得归附；遇到全局崩盘式的末世，你的路线没有答案。",
+        "靠个人威望维系的跨族群联盟，继承问题同样尖锐——孙辈未必有你的公信力。",
+        "高信义的人容易高估信义在别人决策中的权重，乱世里会被投机者利用。"
+      ],
+      "advice": [
+        "给“归附/合作”设可验证的前提（对方履约能力、对本地生态的保护），好心不能替代尽调。",
+        "趁威望在时把联盟制度化：让人认共同规则，而不是认你这个人。",
+        "培养接班人时允许他保留你没有的一面——在彻底崩盘点上敢于独立的那一面。"
+      ]
+    }
+  ]
+}</script>
+<script>
+const Q = JSON.parse(document.getElementById('data-questions').textContent);
+const F = JSON.parse(document.getElementById('data-figures').textContent);
+const DIMS = ['d1','d2','d3','d4','d5','d6'];
+const answers = {};
+let idx = 0;
+let advanceTimer = null;
+
+// 预计算每位人物的 Top3 近邻
+const NEI = F.figures.map(f=>{
+  const arr=F.figures.filter(g=>g.id!==f.id).map(g=>({id:g.id,name:g.name,
+    dist:Math.sqrt(DIMS.reduce((s,d,i)=>s+Math.pow(f.scores[i]-g.scores[i],2),0))}));
+  arr.sort((a,b)=>a.dist-b.dist);
+  return arr.slice(0,3);
+});
+const figById = id=>F.figures.find(f=>f.id===id);
+
+const App = {
+  // ---------- 测评主流程 ----------
+  start(){
+    document.getElementById('screen-intro').style.display='none';
+    document.getElementById('screen-result').style.display='none';
+    document.getElementById('screen-quiz').style.display='flex';
+    if(advanceTimer){clearTimeout(advanceTimer);advanceTimer=null;}
+    idx = 0; this.renderQ(); window.scrollTo(0,0);
+  },
+  go(n){ idx = Math.max(0, Math.min(47, idx+n)); this.renderQ(); },
+  renderQ(){
+    if(advanceTimer){clearTimeout(advanceTimer);advanceTimer=null;}
+    const q = Q.questions[idx];
+    document.getElementById('qtext').textContent = (idx+1)+'. '+q.text;
+    document.getElementById('pnow').textContent = idx+1;
+    document.getElementById('bar').style.width = ((idx)/48*100)+'%';
+    document.getElementById('warn').textContent='';
+    const box = document.getElementById('opts'); box.innerHTML='';
+    Q.scale_labels.forEach((lab,v)=>{
+      const val=v+1;
+      const div=document.createElement('div');
+      div.className='opt'+(answers[q.id]===val?' sel':'');
+      div.innerHTML='<span class="dot"></span><span>'+lab+'</span>';
+      div.onclick=()=>{
+        answers[q.id]=val;
+        App.renderQ();
+        const isLast = idx===47;
+        advanceTimer = setTimeout(()=>{
+          advanceTimer = null;
+          isLast ? App.finish() : App.go(1);
+        }, 320);
+      };
+      box.appendChild(div);
+    });
+    document.getElementById('btnPrev').style.visibility = idx===0?'hidden':'visible';
+    document.getElementById('btnNext').textContent = idx===47?'查看结果':'下一题';
+  },
+  prev(){ this.go(-1); },
+  next(){
+    const q=Q.questions[idx];
+    if(answers[q.id]===undefined){document.getElementById('warn').textContent='请选择一个选项后继续（没有对错，凭直觉即可）';return;}
+    if(idx<47){idx++;this.renderQ();} else { this.finish(); }
+  },
+  scores(){
+    const acc={}; DIMS.forEach(d=>acc[d]=[]);
+    Q.questions.forEach(q=>{
+      const v=answers[q.id];
+      acc[q.dim].push(q.key==='+'?(v-1)/4*100:(5-v)/4*100);
+    });
+    return DIMS.map(d=>acc[d].reduce((a,b)=>a+b,0)/acc[d].length);
+  },
+  match(vec){
+    const arr=F.figures.map(f=>({f,dist:Math.sqrt(DIMS.reduce((s,d,i)=>s+Math.pow(vec[i]-f.scores[i],2),0))}));
+    arr.sort((a,b)=>a.dist-b.dist);
+    return arr;
+  },
+  finish(){
+    for(const q of Q.questions){ if(answers[q.id]===undefined){
+      idx=Q.questions.indexOf(q);
+      document.getElementById('screen-result').style.display='none';
+      document.getElementById('screen-quiz').style.display='flex';
+      this.renderQ(); return;} }
+    document.getElementById('bar').style.width='100%';
+    const vec=this.scores(), m=this.match(vec);
+    document.getElementById('screen-quiz').style.display='none';
+    document.getElementById('screen-result').style.display='';
+    document.getElementById('screen-result').innerHTML = this.resultHTML(vec,m);
+    window.scrollTo(0,0);
+  },
+
+  // ---------- 共享渲染 ----------
+  radar(figVec, userVec){
+    const cx=180,cy=175,R=120,n=6;
+    const pt=(arr,i,r)=>{const a=-Math.PI/2+i*2*Math.PI/n;const v=arr[i]/100;
+      return [cx+Math.cos(a)*r*v, cy+Math.sin(a)*r*v];};
+    const poly=arr=>arr.map((_,i)=>pt(arr,i,R).join(',')).join(' ');
+    let grid='';
+    [0.25,0.5,0.75,1].forEach(k=>{
+      const p=DIMS.map((_,i)=>{const a=-Math.PI/2+i*2*Math.PI/n;
+        return [cx+Math.cos(a)*R*k,cy+Math.sin(a)*R*k].join(',')}).join(' ');
+      grid+=`<polygon points="${p}" fill="none" stroke="#d8cdb6" stroke-width="1"/>`;
+    });
+    for(let i=0;i<n;i++){const a=-Math.PI/2+i*2*Math.PI/n;
+      grid+=`<line x1="${cx}" y1="${cy}" x2="${cx+Math.cos(a)*R}" y2="${cy+Math.sin(a)*R}" stroke="#d8cdb6"/>`;}
+    let labels='';
+    DIMS.forEach((d,i)=>{const a=-Math.PI/2+i*2*Math.PI/n;
+      labels+=`<text x="${cx+Math.cos(a)*(R+34)}" y="${cy+Math.sin(a)*(R+30)+4}" text-anchor="middle" font-size="13" fill="#6b6155">${Q.dimensions[d].name}</text>`;});
+    const user = userVec? `<polygon points="${poly(userVec)}" fill="rgba(138,31,31,.20)" stroke="#8a1f1f" stroke-width="2.2"/>
+      ${userVec.map((_,i)=>{const[x,y]=pt(userVec,i,R);return `<circle cx="${x}" cy="${y}" r="3.4" fill="#8a1f1f"/>`}).join('')}`:'';
+    const legend = userVec
+      ? '<span style="color:#8a1f1f">— 你的剖面</span> ｜ <span style="color:#a98a45">┄ 原型剖面</span>'
+      : '<span style="color:#a98a45">┄ 原型剖面（六维分数）</span>';
+    return `<svg viewBox="0 0 360 350" style="width:100%;max-width:420px;display:block;margin:auto">
+      ${grid}${labels}
+      <polygon points="${poly(figVec)}" fill="rgba(169,138,69,.18)" stroke="#a98a45" stroke-width="1.6" stroke-dasharray="5 3"/>
+      ${user}
+    </svg>
+    <div style="text-align:center;font-size:12.5px;color:#6b6155">${legend}</div>`;
+  },
+  dimBars(vec){
+    return DIMS.map((d,i)=>{
+      const meta=Q.dimensions[d], v=Math.round(vec[i]);
+      const pole = v>=50?meta.name:meta.opposite;
+      return `<div class="dimbar">
+        <div class="lab"><span><b>${meta.name}</b> ↔ ${meta.opposite}</span><span><b style="color:#8a1f1f">${v}</b> · 偏${pole}</span></div>
+        <div class="track"><div class="mid"></div><div class="fill" style="left:${v>=50?'50%':v+'%'};width:${Math.abs(v-50)}%"></div></div>
+      </div>`;
+    }).join('');
+  },
+  bullets(arr){return '<ul class="clean">'+arr.map(x=>`<li>${x}</li>`).join('')+'</ul>';},
+  neighPills(fi, clickable){
+    return NEI[fi].map(g=>{
+      const cls=clickable?'pill link':'pill';
+      const onclick=clickable?` onclick="App.openArchiveAt(${g.id})"`:'';
+      return `<span class="${cls}"${onclick}>${g.name} <b>${g.dist.toFixed(1)}</b></span>`;
+    }).join('');
+  },
+  openArchiveAt(id){ this.openArchive(id); },
+  // 单张人物卡（结果页与档案页共用）
+  figureCard(f, opts){
+    opts = opts||{};
+    const fi = F.figures.indexOf(f);
+    const radar = this.radar(f.scores, opts.userVec||null);
+    const dims = this.dimBars(opts.userVec||f.scores);
+    const distLine = opts.userDist!=null
+      ? `<div style="font-size:12px;color:#6b6155;margin-top:6px">你与 ${f.name} 的原型距离：<b style="color:#8a1f1f">${opts.userDist.toFixed(1)}</b>（越小越像）</div>`
+      : `<div style="font-size:12px;color:#6b6155;margin-top:6px">主要史料：${f.source}</div>`;
+    const dual = opts.dual||'';
+    return `
+    <div class="card hero">
+      <div class="era">${f.era} · ${f.role}</div>
+      <h2>${f.name}</h2>
+      <div class="tag">${f.tagline}</div>
+      ${dual}
+      <div class="verdict">${f.verdict}</div>
+      <div class="grid2"><div>${radar}</div><div style="align-self:center">${dims}</div></div>
+      ${distLine}
+    </div>
+    <div class="card">
+      <h3 class="sec">他/她一般怎么处理事情</h3>
+      ${this.bullets(f.style)}
+      <h3 class="sec">史料锚点（凭什么这么说）</h3>
+      <div class="histlist">${this.bullets(f.anchors)}</div>
+      <div class="grid2">
+        <div><h3 class="sec" style="border-color:#8a1f1f">盲区（和优点同源）</h3>${this.bullets(f.blind)}</div>
+        <div><h3 class="sec" style="border-color:#3e5c48">行动建议</h3>${this.bullets(f.advice)}</div>
+      </div>
+      <h3 class="sec">与${f.name}相近的另外两位</h3>
+      <div class="neigh arc-neigh">${this.neighPills(fi, !!opts.clickNeighbor)}</div>
+      <div class="note">主要史料：${f.source}。本结果为自我省察工具，不是心理诊断；人物分数由可考事迹编码得出，方法与全部证据见随附设计文档（docs/ 目录）。</div>
+    </div>`;
+  },
+  resultHTML(vec,m){
+    const top=m[0], sec=m[1], third=m[2], f=top.f;
+    const dual = (sec.dist-top.dist)<15
+      ? `<div class="dual">你处在 <b>${f.name}</b> 与 <b>${sec.f.name}</b> 之间（距离差仅 ${(sec.dist-top.dist).toFixed(1)}）：两者都看一遍，你会更认得自己。</div>`
+      : '';
+    return this.figureCard(f,{userVec:vec,userDist:top.dist,dual,clickNeighbor:true}) + `
+    <div class="footer-actions">
+      <button class="btn ghost" onclick="location.reload()">重新测试</button>
+    </div>`;
+  },
+
+  // ---------- 人物档案：左滑右滑 ----------
+  archiveFrom: null,
+  arcIdx: 0,
+  arcBuilt: false,
+  openArchive(focusId){
+    this.archiveFrom = ['intro','quiz','result'].find(s=>
+      document.getElementById('screen-'+s).style.display!=='none') || 'intro';
+    document.getElementById('archiveEntry').style.display='none';
+    this.buildArchive();
+    this.archiveToId(focusId||F.figures[0].id, false);
+    const el=document.getElementById('screen-archive');
+    el.style.display='flex';
+    document.getElementById('arcStage').scrollTop=0;
+  },
+  closeArchive(){
+    document.getElementById('screen-archive').style.display='none';
+    document.getElementById('archiveEntry').style.display='';
+  },
+  buildArchive(){
+    if(this.arcBuilt) return;
+    const track=document.getElementById('arcTrack');
+    track.innerHTML = F.figures.map(f=>`<div class="arc-page" data-id="${f.id}">${this.figureCard(f,{clickNeighbor:true})}</div>`).join('');
+    const dots=document.getElementById('arcDots');
+    dots.innerHTML=F.figures.map((f,i)=>`<i data-i="${i}"></i>`).join('');
+    dots.querySelectorAll('i').forEach(el=>el.onclick=()=>this.archiveGo(parseInt(el.dataset.i)-this.arcIdx));
+    // 触摸滑动（同时兼容 Touch 与 Pointer）
+    const stage=document.getElementById('arcStage');
+    let sx=0,sy=0,dx=0,tracking=false,lockDir=null;
+    const down=(x,y)=>{sx=x;sy=y;dx=0;tracking=true;lockDir=null;
+      track.style.transition='none';};
+    const move=(x,y)=>{if(!tracking)return;dx=x-sx;
+      if(lockDir===null&&(Math.abs(dx)>8||Math.abs(y-sy)>8)){
+        lockDir = Math.abs(dx)>Math.abs(y-sy)?'x':'y';
+      }
+      if(lockDir==='x'){stage.scrollTop=stage._sy||0;track.style.transform=`translateX(calc(${-this.arcIdx*100}% + ${dx}px))`;}
+    };
+    const up=()=>{if(!tracking)return;tracking=false;track.style.transition='';
+      if(lockDir==='x'&&Math.abs(dx)>45){ this.archiveGo(dx<0?1:-1); }
+      else { this.snap(); }
+      dx=0;lockDir=null;};
+    stage.addEventListener('touchstart',e=>{stage._sy=stage.scrollTop;down(e.touches[0].clientX,e.touches[0].clientY);},{passive:true});
+    stage.addEventListener('touchmove',e=>move(e.touches[0].clientX,e.touches[0].clientY),{passive:true});
+    stage.addEventListener('touchend',up);
+    let pdown=false;
+    stage.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'){pdown=true;stage._sy=stage.scrollTop;down(e.clientX,e.clientY);}});
+    stage.addEventListener('pointermove',e=>{if(pdown)move(e.clientX,e.clientY);});
+    stage.addEventListener('pointerup',()=>{if(pdown){pdown=false;up();}});
+    stage.addEventListener('pointercancel',()=>{pdown=false;if(tracking){tracking=false;this.snap();}});
+    // 键盘左右（桌面）
+    document.addEventListener('keydown',e=>{
+      if(document.getElementById('screen-archive').style.display!=='flex')return;
+      if(e.key==='ArrowLeft')this.archiveGo(-1);
+      if(e.key==='ArrowRight')this.archiveGo(1);
+      if(e.key==='Escape')this.closeArchive();
+    });
+    this.arcBuilt=true;
+  },
+  snap(){
+    document.getElementById('arcTrack').style.transform=`translateX(${-this.arcIdx*100}%)`;
+  },
+  archiveToId(id, animate){
+    const i=F.figures.findIndex(f=>f.id===id);
+    if(i<0)return;
+    this.arcIdx=i;
+    const track=document.getElementById('arcTrack');
+    if(animate===false)track.style.transition='none';
+    track.style.transform=`translateX(${-i*100}%)`;
+    if(animate===false)requestAnimationFrame(()=>requestAnimationFrame(()=>track.style.transition=''));
+    document.getElementById('arcCount').textContent=(i+1)+' / '+F.figures.length;
+    document.getElementById('arcPrev').disabled = i===0;
+    document.getElementById('arcNext').disabled = i===F.figures.length-1;
+    document.querySelectorAll('#arcDots i').forEach((el,k)=>el.classList.toggle('on',k===i));
+    document.getElementById('arcStage').scrollTop=0;
+  },
+  archiveGo(step){
+    const next=Math.max(0,Math.min(F.figures.length-1,this.arcIdx+step));
+    this.archiveToId(F.figures[next].id, true);
+  }
+};
+</script>
+</body>
+</html>
