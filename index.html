@@ -88,8 +88,6 @@ h3.sec{font-size:17px;letter-spacing:3px;margin:26px 0 8px;padding-left:12px;
 .footer-actions{margin-top:30px;text-align:center}
 .histlist{font-size:13.5px;color:var(--ink2)}
 .histlist b{color:var(--ink)}
-.toc-figures{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}
-.toc-figures span{font-size:13.5px;text-align:center;padding:6px 4px;border:1px solid var(--line);border-radius:6px;background:#fffdf7}
 
 /* 右上角「人物档案」入口 */
 #archiveEntry{position:fixed;top:max(12px,env(safe-area-inset-top));right:12px;z-index:60;
@@ -139,8 +137,6 @@ h3.sec{font-size:17px;letter-spacing:3px;margin:26px 0 8px;padding-left:12px;
   .row{gap:10px;margin-top:16px}
   .row .btn{flex:1}
   .grid2{grid-template-columns:1fr;gap:10px}
-  .toc-figures{grid-template-columns:repeat(4,1fr);gap:6px}
-  .toc-figures span{font-size:12px;padding:5px 2px}
   .guide{font-size:12.5px;padding:10px 12px;margin-top:14px}
 
   /* 答题屏：一屏完整容下，不滚动（显隐由 JS 内联样式控制）*/
@@ -206,12 +202,6 @@ h3.sec{font-size:17px;letter-spacing:3px;margin:26px 0 8px;padding-left:12px;
       <p style="font-size:14.5px;color:var(--ink2)">基于<b style="color:var(--ink)">大五人格模型（OCEAN）</b>本土化的六个维度，
       把你的行为倾向与 16 位<b style="color:var(--ink)">正史有传、事迹可考</b>的真实决策者做原型匹配——曹操、诸葛亮、张良、韩信、苏轼、王安石、王阳明、曾国藩，
       以及吕雉、武则天、长孙皇后、冯太后、李清照、秦良玉、孝庄文皇后、冼夫人。</p>
-      <div class="toc-figures">
-        <span>曹操</span><span>诸葛亮</span><span>张良</span><span>韩信</span>
-        <span>苏轼</span><span>王安石</span><span>王阳明</span><span>曾国藩</span>
-        <span>吕雉</span><span>武则天</span><span>长孙皇后</span><span>冯太后</span>
-        <span>李清照</span><span>秦良玉</span><span>孝庄文皇后</span><span>冼夫人</span>
-      </div>
       <div class="row" style="justify-content:center">
         <button class="btn" onclick="App.start()">开 始 测 评</button>
       </div>
