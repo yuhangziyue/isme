@@ -52,6 +52,23 @@ h1{font-size:38px;line-height:1.2;margin:18px 0 8px;letter-spacing:7px}
 .guide-card li::before{content:"";position:absolute;left:2px;top:14px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
 .intro-actions{display:flex;gap:12px;margin-top:18px}
 .intro-actions .btn{flex:1}
+.last-card{width:100%;display:block;text-align:left;background:var(--card);
+  border:1px solid rgba(138,31,31,.22);border-radius:18px;padding:16px 18px;margin-top:16px;
+  box-shadow:0 10px 28px rgba(72,50,20,.08);cursor:pointer;color:var(--ink);
+  transition:transform .16s,border-color .16s}
+.last-card:hover{border-color:var(--gold)}
+.last-card:active{transform:scale(.985)}
+.last-top{display:flex;align-items:center;gap:10px;min-width:0}
+.last-label{flex:none;color:#fff;background:var(--red);border-radius:999px;
+  font-size:11px;font-weight:700;letter-spacing:1px;padding:3px 10px}
+.last-era{flex:1;min-width:0;color:var(--faint);font-size:12px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.last-date{flex:none;color:var(--faint);font-size:11.5px}
+.last-bottom{display:flex;align-items:center;gap:10px;margin-top:9px}
+.last-bottom b{font-size:22px;letter-spacing:3px;color:var(--ink)}
+.last-bottom span{flex:1;min-width:0;color:var(--red);font-size:13px;font-weight:700;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.last-bottom em{font-style:normal;color:var(--faint);font-size:13px}
 .saved-tip{text-align:center;min-height:22px;font-size:12.5px;color:var(--faint);margin-top:10px}
 .text-link{border:none;background:transparent;color:var(--gold);font-size:12.5px;cursor:pointer;padding:4px 8px;text-decoration:underline}
 .btn{appearance:none;border:none;cursor:pointer;min-height:46px;
@@ -200,6 +217,11 @@ h1{font-size:38px;line-height:1.2;margin:18px 0 8px;letter-spacing:7px}
   .intro-copy{font-size:13px;line-height:1.7;margin:12px 0}
   .guide-card{padding:12px}
   .guide-card li{font-size:12.5px;padding:4px 0 4px 15px}
+  .last-card{padding:13px 14px;margin-top:12px;border-radius:16px}
+  .last-top{gap:8px}
+  .last-bottom{margin-top:7px}
+  .last-bottom b{font-size:20px;letter-spacing:2px}
+  .last-bottom span,.last-bottom em{font-size:12px}
   .intro-actions{gap:9px;margin-top:14px}
   .btn{min-height:44px;font-size:15px;letter-spacing:2px;padding:10px 16px}
 
@@ -240,6 +262,9 @@ h1{font-size:38px;line-height:1.2;margin:18px 0 8px;letter-spacing:7px}
   .intro-actions{flex-direction:column}
   .opt{font-size:13.8px}
 }
+@media(prefers-reduced-motion:reduce){
+  .screen,.opt,.btn,.last-card,.arc-track,.progress i{animation:none!important;transition:none!important}
+}
 </style>
 </head>
 <body>
@@ -254,6 +279,7 @@ h1{font-size:38px;line-height:1.2;margin:18px 0 8px;letter-spacing:7px}
       <p class="sub">中国历史名人人格原型测评 · 16 位正史人物 · 男女各半</p>
       <div class="slogan">更好地了解自己，解锁天赋吧</div>
     </div>
+    <div id="lastResultCard"></div>
     <div class="card">
       <div class="stats-grid">
         <div class="stat"><b>48</b><span>道单选题</span></div>
@@ -1048,6 +1074,7 @@ const Q = JSON.parse(document.getElementById('data-questions').textContent);
 const F = JSON.parse(document.getElementById('data-figures').textContent);
 const DIMS = ['d1','d2','d3','d4','d5','d6'];
 const STORAGE_KEY = 'isme_answers_v1';
+const LAST_KEY = 'isme_last_result_v1';
 const N = Q.questions.length;
 
 function loadAnswers(){
@@ -1066,6 +1093,8 @@ let idx = 0;
 let advanceTimer = null;
 let isFinishing = false;
 let topResult = null;
+let inputLockedUntil = 0;
+let inputLockTimer = null;
 
 const NEI = F.figures.map(f=>{
   const arr = F.figures.filter(g=>g.id!==f.id).map(g=>({
@@ -1076,12 +1105,97 @@ const NEI = F.figures.map(f=>{
   return arr.slice(0,3);
 });
 
+function shuffle(list){
+  const arr=list.slice();
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+function mixedFigures(list){
+  const men=shuffle(list.filter(f=>f.gender==='男'));
+  const women=shuffle(list.filter(f=>f.gender==='女'));
+  let first=men, second=women;
+  if(Math.random()<0.5){ first=women; second=men; }
+  const out=[];
+  for(let i=0;i<Math.max(first.length,second.length);i++){
+    if(first[i]) out.push(first[i]);
+    if(second[i]) out.push(second[i]);
+  }
+  return out;
+}
+const ARCHIVE_ORDER = mixedFigures(F.figures);
+
 const App = {
   answeredCount(){
     return Q.questions.filter(q=>answers[q.id]!==undefined).length;
   },
   saveAnswers(){
     try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(answers)); }catch(e){}
+  },
+  isInputLocked(){
+    return Date.now() < inputLockedUntil;
+  },
+  lockInput(ms){
+    inputLockedUntil = Date.now() + ms;
+    clearTimeout(inputLockTimer);
+    inputLockTimer = setTimeout(()=>{ inputLockedUntil = 0; }, ms);
+  },
+  getLastSnapshot(){
+    try{
+      const snap = JSON.parse(localStorage.getItem(LAST_KEY) || 'null');
+      if(!snap || snap.figureId == null || !Array.isArray(snap.vec) || snap.vec.length !== 6) return null;
+      const vec = snap.vec.map(Number);
+      if(vec.some(v=>!Number.isFinite(v) || v < 0 || v > 100)) return null;
+      const f = F.figures.find(x=>x.id === Number(snap.figureId));
+      return f ? {f,vec,time:Number(snap.time)||0} : null;
+    }catch(e){ return null; }
+  },
+  saveLastResult(vec,f){
+    try{
+      localStorage.setItem(LAST_KEY, JSON.stringify({figureId:f.id,vec,time:Date.now()}));
+    }catch(e){}
+  },
+  formatDate(ts){
+    const d = new Date(ts);
+    const p = n => (n<10?'0':'')+n;
+    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
+  },
+  renderLastResultCard(){
+    const box = document.getElementById('lastResultCard');
+    const snap = this.getLastSnapshot();
+    if(!snap){
+      box.innerHTML = '';
+      return;
+    }
+    box.innerHTML = `<button class="last-card" onclick="App.viewLastResult()" aria-label="查看上次测评结果">
+      <span class="last-top">
+        <span class="last-label">我的结果</span>
+        <span class="last-era">${snap.f.era} · ${snap.f.role}</span>
+        <span class="last-date">${snap.time ? this.formatDate(snap.time) : ''}</span>
+      </span>
+      <span class="last-bottom">
+        <b>${snap.f.name}</b><span>${snap.f.tagline}</span><em>查看 ›</em>
+      </span>
+    </button>`;
+  },
+  viewLastResult(){
+    const snap = this.getLastSnapshot();
+    if(!snap) return;
+    const ranked = this.match(snap.vec);
+    const at = ranked.findIndex(x=>x.f.id===snap.f.id);
+    if(at > 0){
+      const [saved] = ranked.splice(at,1);
+      ranked.unshift(saved);
+    }
+    topResult = {vec:snap.vec,m:ranked};
+    document.getElementById('screen-intro').style.display='none';
+    document.getElementById('screen-quiz').style.display='none';
+    const el = document.getElementById('screen-result');
+    el.style.display='block';
+    el.innerHTML = this.resultHTML(snap.vec,ranked,true);
+    document.querySelector('.wrap').scrollTo(0,0);
   },
   updateIntroCta(){
     const done = this.answeredCount();
@@ -1148,12 +1262,13 @@ const App = {
     nextBtn.textContent = idx===N-1 ? '查看结果' : '下一题';
   },
   selectAnswer(val){
-    if(isFinishing) return;
+    if(isFinishing || this.isInputLocked()) return;
     const q = Q.questions[idx];
     answers[q.id] = val;
     this.saveAnswers();
     this.renderQ();
     const last = idx===N-1;
+    this.lockInput(last ? 700 : 560);
     advanceTimer = setTimeout(()=>{
       advanceTimer = null;
       if(last) this.finish();
@@ -1202,6 +1317,8 @@ const App = {
     const vec = this.scores();
     const m = this.match(vec);
     topResult = {vec,m};
+    this.saveLastResult(vec,m[0].f);
+    this.renderLastResultCard();
     document.getElementById('bar').style.width = '100%';
     document.getElementById('screen-quiz').style.display='none';
     const el = document.getElementById('screen-result');
@@ -1212,6 +1329,8 @@ const App = {
   },
   restart(){
     if(advanceTimer){clearTimeout(advanceTimer);advanceTimer=null;}
+    clearTimeout(inputLockTimer);
+    inputLockedUntil = 0;
     isFinishing = false;
     topResult = null;
     this.start(true);
@@ -1337,10 +1456,11 @@ const App = {
       ${this.infoSection('史料锚点（凭什么这么说）', f.anchors, true)}
     </div>`;
   },
-  resultHTML(vec,m){
+  resultHTML(vec,m,snapshot=false){
     const top=m[0], sec=m[1], f=top.f;
-    const dual = (sec.dist-top.dist)<15
-      ? `<div class="dual">你处在 <b>${f.name}</b> 与 <b>${sec.f.name}</b> 之间（距离差仅 ${(sec.dist-top.dist).toFixed(1)}）：两个人物都看一遍，你会更认得自己。</div>`
+    const gap = sec.dist-top.dist;
+    const dual = !snapshot && gap>=0 && gap<15
+      ? `<div class="dual">你处在 <b>${f.name}</b> 与 <b>${sec.f.name}</b> 之间（距离差仅 ${gap.toFixed(1)}）：两个人物都看一遍，你会更认得自己。</div>`
       : '';
     return `
       ${this.heroCard(f, dual)}
@@ -1439,7 +1559,7 @@ ${shareData.url}`;
     this.archiveFrom = this.visibleScreen();
     document.getElementById('archiveEntry').style.display='none';
     this.buildArchive();
-    this.archiveToId(focusId || F.figures[0].id, false);
+    this.archiveToId(focusId || ARCHIVE_ORDER[0].id, false);
     document.getElementById('screen-archive').style.display='flex';
     document.getElementById('arcStage').scrollTop=0;
   },
@@ -1450,9 +1570,9 @@ ${shareData.url}`;
   buildArchive(){
     if(this.arcBuilt) return;
     const track = document.getElementById('arcTrack');
-    track.innerHTML = F.figures.map(f=>`<div class="arc-page" data-id="${f.id}">${this.archiveFigureHTML(f)}</div>`).join('');
+    track.innerHTML = ARCHIVE_ORDER.map(f=>`<div class="arc-page" data-id="${f.id}">${this.archiveFigureHTML(f)}</div>`).join('');
     const dots = document.getElementById('arcDots');
-    dots.innerHTML = F.figures.map((f,i)=>`<i data-i="${i}"></i>`).join('');
+    dots.innerHTML = ARCHIVE_ORDER.map((f,i)=>`<i data-i="${i}"></i>`).join('');
     dots.querySelectorAll('i').forEach(el=>{
       el.onclick=()=>this.archiveGo(parseInt(el.dataset.i,10)-this.arcIdx);
     });
@@ -1498,7 +1618,7 @@ ${shareData.url}`;
     document.getElementById('arcTrack').style.transform=`translateX(${-this.arcIdx*100}%)`;
   },
   archiveToId(id, animate){
-    const i=F.figures.findIndex(f=>f.id===id);
+    const i=ARCHIVE_ORDER.findIndex(f=>f.id===id);
     if(i<0)return;
     this.arcIdx=i;
     const track=document.getElementById('arcTrack');
@@ -1507,15 +1627,16 @@ ${shareData.url}`;
     if(animate===false)requestAnimationFrame(()=>requestAnimationFrame(()=>track.style.transition=''));
     document.getElementById('arcCount').textContent=`${i+1} / ${F.figures.length}`;
     document.getElementById('arcPrev').disabled = i===0;
-    document.getElementById('arcNext').disabled = i===F.figures.length-1;
+    document.getElementById('arcNext').disabled = i===ARCHIVE_ORDER.length-1;
     document.querySelectorAll('#arcDots i').forEach((el,k)=>el.classList.toggle('on',k===i));
     document.getElementById('arcStage').scrollTop=0;
   },
   archiveGo(step){
-    const next=Math.max(0,Math.min(F.figures.length-1,this.arcIdx+step));
-    this.archiveToId(F.figures[next].id,true);
+    const next=Math.max(0,Math.min(ARCHIVE_ORDER.length-1,this.arcIdx+step));
+    this.archiveToId(ARCHIVE_ORDER[next].id,true);
   }
 };
+App.renderLastResultCard();
 App.updateIntroCta();
 </script>
 </body>
